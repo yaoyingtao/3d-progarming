@@ -15,5 +15,5 @@ varying vec2 DestTexturCoord;
 void main(void) {
     DestinationColor = SourceColor;
     DestTexturCoord = TexturCoord;
-    gl_Position = vec4(Position, 0.0, 1.0);
+    gl_Position =    Projection * Modelview * vec4(Position, 0.0, 1.0);
 }

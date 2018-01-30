@@ -10,6 +10,7 @@
 #import <OpenGLES/ES2/glext.h>
 #import <OpenGLES/ES2/gl.h>
 #import <QuartzCore/QuartzCore.h>
+#import "CC3GLMatrix.h"
 
 
 
@@ -34,14 +35,21 @@ const GLubyte indices[] = {
     3,4,5
 };
 
+static CGFloat rotationSpeed = 0.5;
 
 @interface GLView ()
 @property (nonatomic, strong) EAGLContext *contex;
 @property (nonatomic, strong) CAEAGLLayer *eaglLayer;
 
+@property (nonatomic, assign) CGFloat currentDegree;
+
+
 @property (nonatomic, assign) GLuint colorRenderBuffer;
 @property (nonatomic, assign) GLuint positionSlot;
 @property (nonatomic, assign) GLuint colorSlot;
+
+@property (nonatomic, assign) GLuint projectionUniform;
+@property (nonatomic, assign) GLuint modleUniform;
 
 @end
 
@@ -57,14 +65,55 @@ const GLubyte indices[] = {
         [self setupFrameBuffer];
         [self compileShaders];
         [self setupVBO];
-//        //        [self setupDisplayLink];
+        
+        [self applyOrthoX:2 Y:3];
+        
+        [self setupDisplayLink];
 //        _floorTexture = [self setupTexture:@"tile_floor.png" texure:GL_TEXTURE0];
 //        _fishTexture = [self setupTexture:@"item_powerup_fish.png" texure:GL_TEXTURE1];
-        [self render:nil];
+//        [self render:nil];
         
     }
     
     return self;
+}
+
+- (void)dealloc {
+    [self unregisterRotationNotify];
+}
+
+- (void)registerRotationNotify {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rotaionNotify:) name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+
+- (void)unregisterRotationNotify {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)rotaionNotify:(NSNotification*)notify {
+    UIDeviceOrientation oritation = [[UIDevice currentDevice] orientation];
+    CGFloat degree = 0;
+    switch (oritation) {
+        case UIDeviceOrientationPortrait: {
+            degree = 0;
+        }
+            break;
+        case UIDeviceOrientationPortraitUpsideDown: {
+            degree = 180;
+        }
+            break;
+        case UIDeviceOrientationLandscapeLeft: {
+            degree = 270;
+        }
+            break;
+        case UIDeviceOrientationLandscapeRight: {
+            degree = 90;
+        }
+            break;
+        default:
+            break;
+    }
+    [self applyRotation:degree];
 }
 
 + (Class)layerClass {
@@ -124,12 +173,15 @@ const GLubyte indices[] = {
 }
 
 - (void)render:(CADisplayLink*)displayLink {
-    glClearColor(0, 104.0/255.0, 55.0/255.0, 1.0);
+    glClearColor(0.5, 0.5, 0.5, 1.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     
     
     glViewport(0, 0, self.frame.size.width, self.frame.size.height);
+    
+    self.currentDegree += rotationSpeed;
+    [self applyRotation:self.currentDegree];
     
     glVertexAttribPointer(_positionSlot, 2, GL_FLOAT, GL_FALSE, 6*sizeof(float), 0);
     glVertexAttribPointer(_colorSlot, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), 2*sizeof(float));
@@ -169,8 +221,8 @@ const GLubyte indices[] = {
     _colorSlot = glGetAttribLocation(programHandle, "SourceColor");
 //    _texureSlot = glGetAttribLocation(programHandle, "TexturCoord");
 //
-//    _projectionUniform = glGetUniformLocation(programHandle, "Projection");
-//    _modelViewUniform = glGetUniformLocation(programHandle, "Modelview");
+    _projectionUniform = glGetUniformLocation(programHandle, "Projection");
+    _modleUniform = glGetUniformLocation(programHandle, "Modelview");
 //
 //    _textureUniform = glGetUniformLocation(programHandle, "ourTexture");
 //    _fishUniform = glGetUniformLocation(programHandle, "fishTexture");
@@ -247,6 +299,36 @@ const GLubyte indices[] = {
     
     free(spirteData);
     return texName;
+}
+
+- (void)applyOrthoX:(CGFloat)maxX Y:(CGFloat)maxY {
+    float a = 1.0f / maxX;
+    float b = 1.0f / maxY;
+    float ortho[16] = {
+        a, 0,  0, 0,
+        0, b,  0, 0,
+        0, 0, 1, 0,
+        0, 0,  0, 1
+    };
+    
+    glUniformMatrix4fv(_projectionUniform, 1, 0, &ortho[0]);
+}
+
+- (void)applyRotation:(CGFloat)degrees {
+//    float radians = degrees * 3.14159f / 180.0f;
+//    float s = sin(radians);
+//    float c = cos(radians);
+//    float zRotation[16] = {
+//        c, s, 0, 0,
+//        -s, c, 0, 0,
+//        0, 0, 1, 0,
+//        0, 0, 0, 1
+//    };
+    
+    CC3GLMatrix *rotation = [[CC3GLMatrix alloc] initIdentity];
+    [rotation rotateByZ:degrees];
+    
+    glUniformMatrix4fv(_modleUniform, 1, 0, rotation.glMatrix);
 }
 
 @end
