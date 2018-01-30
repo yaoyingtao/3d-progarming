@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "GLView.h"
 
 @interface ViewController ()
 
@@ -17,6 +18,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    GLView *glView = [[GLView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), CGRectGetWidth(self.view.bounds))];
+    glView.center = self.view.center;
+    [self.view addSubview:glView];
 }
 
 

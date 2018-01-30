@@ -14,6 +14,10 @@
 		EC7E5B59201EB50400BAB2F1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC7E5B57201EB50400BAB2F1 /* LaunchScreen.storyboard */; };
 		EC7E5B5C201EB50400BAB2F1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EC7E5B5B201EB50400BAB2F1 /* main.m */; };
 		EC7E5B65201EB7D300BAB2F1 /* GLView.m in Sources */ = {isa = PBXBuildFile; fileRef = EC7E5B64201EB7D300BAB2F1 /* GLView.m */; };
+		EC7E5B6C202002B400BAB2F1 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC7E5B6B202002B400BAB2F1 /* OpenGLES.framework */; };
+		EC7E5B6E202002BA00BAB2F1 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC7E5B6D202002BA00BAB2F1 /* QuartzCore.framework */; };
+		EC7E5B712020039F00BAB2F1 /* SimpleFragment.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EC7E5B6F2020039E00BAB2F1 /* SimpleFragment.glsl */; };
+		EC7E5B722020039F00BAB2F1 /* SimpleVertex.glsl in Resources */ = {isa = PBXBuildFile; fileRef = EC7E5B702020039F00BAB2F1 /* SimpleVertex.glsl */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +33,10 @@
 		EC7E5B5B201EB50400BAB2F1 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		EC7E5B63201EB7D300BAB2F1 /* GLView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLView.h; sourceTree = "<group>"; };
 		EC7E5B64201EB7D300BAB2F1 /* GLView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLView.m; sourceTree = "<group>"; };
+		EC7E5B6B202002B400BAB2F1 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		EC7E5B6D202002BA00BAB2F1 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		EC7E5B6F2020039E00BAB2F1 /* SimpleFragment.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SimpleFragment.glsl; sourceTree = "<group>"; };
+		EC7E5B702020039F00BAB2F1 /* SimpleVertex.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SimpleVertex.glsl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +44,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EC7E5B6E202002BA00BAB2F1 /* QuartzCore.framework in Frameworks */,
+				EC7E5B6C202002B400BAB2F1 /* OpenGLES.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -47,6 +57,7 @@
 			children = (
 				EC7E5B4B201EB50400BAB2F1 /* Ch1 */,
 				EC7E5B4A201EB50400BAB2F1 /* Products */,
+				EC7E5B6A202002B400BAB2F1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -73,6 +84,8 @@
 				EC7E5B5B201EB50400BAB2F1 /* main.m */,
 				EC7E5B63201EB7D300BAB2F1 /* GLView.h */,
 				EC7E5B64201EB7D300BAB2F1 /* GLView.m */,
+				EC7E5B6F2020039E00BAB2F1 /* SimpleFragment.glsl */,
+				EC7E5B702020039F00BAB2F1 /* SimpleVertex.glsl */,
 			);
 			path = Ch1;
 			sourceTree = "<group>";
@@ -82,6 +95,15 @@
 			children = (
 			);
 			path = resource;
+			sourceTree = "<group>";
+		};
+		EC7E5B6A202002B400BAB2F1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EC7E5B6D202002BA00BAB2F1 /* QuartzCore.framework */,
+				EC7E5B6B202002B400BAB2F1 /* OpenGLES.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -143,6 +165,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				EC7E5B59201EB50400BAB2F1 /* LaunchScreen.storyboard in Resources */,
+				EC7E5B712020039F00BAB2F1 /* SimpleFragment.glsl in Resources */,
+				EC7E5B722020039F00BAB2F1 /* SimpleVertex.glsl in Resources */,
 				EC7E5B56201EB50400BAB2F1 /* Assets.xcassets in Resources */,
 				EC7E5B54201EB50400BAB2F1 /* Main.storyboard in Resources */,
 			);
