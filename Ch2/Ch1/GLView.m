@@ -71,10 +71,10 @@ static CGFloat rotationSpeed = 0.5;
         
         [self applyOrthoX:1 Y:1];
         
-//        [self setupDisplayLink];
+        [self setupDisplayLink];
 //        _floorTexture = [self setupTexture:@"tile_floor.png" texure:GL_TEXTURE0];
 //        _fishTexture = [self setupTexture:@"item_powerup_fish.png" texure:GL_TEXTURE1];
-        [self render:nil];
+//        [self render:nil];
         
     }
     
@@ -127,7 +127,7 @@ static CGFloat rotationSpeed = 0.5;
     CGFloat delta = 2*M_PI/count;
     CGFloat theta = 0;
     
-    allSize = sizeof(Vertex) * count*2;
+    allSize = sizeof(Vertex) * (count*2+count+1);
     Vertices = malloc(allSize);
     for (NSInteger i = 0; i < count*2; i = i+2) {
         CGFloat brightness =  fabsf(sinf(theta));
@@ -155,29 +155,29 @@ static CGFloat rotationSpeed = 0.5;
         theta += delta;
     }
     
-//    Vertex *node = Vertices+(count + 1)*2;
-//    node->Color[0] = 0.75;
-//    node->Color[1] = 0.75;
-//    node->Color[2] = 0.75;
-//    node->Color[3] = 1;
-//
-//    node->Position[0] = 0;
-//    node->Position[1] = 1 - coneHeight;
-//    node->Position[2] = 0;
+    Vertex *node = Vertices+count*2;
+    node->Color[0] = 0.75;
+    node->Color[1] = 0.75;
+    node->Color[2] = 0.75;
+    node->Color[3] = 1;
+
+    node->Position[0] = 0;
+    node->Position[1] = 1 - coneHeight;
+    node->Position[2] = 0;
     
     theta = 0;
-//    for (NSInteger i = count*2+1; i < count*2+count+1; i++) {
-//        Vertex *node = Vertices+i;
-//        node->Color[0] = 0.75;
-//        node->Color[1] = 0.75;
-//        node->Color[2] = 0.75;
-//        node->Color[3] = 1;
-//
-//        node->Position[0] = coneRadius *cos(theta);
-//        node->Position[1] = 1 - coneHeight;
-//        node->Position[2] = coneRadius *sin(theta);
-//        theta += delta;
-//    }
+    for (NSInteger i = count*2+1; i < count*2+count+1; i++) {
+        Vertex *node = Vertices+i;
+        node->Color[0] = 0.75;
+        node->Color[1] = 0.75;
+        node->Color[2] = 0.75;
+        node->Color[3] = 1;
+
+        node->Position[0] = coneRadius *cos(theta);
+        node->Position[1] = 1 - coneHeight;
+        node->Position[2] = coneRadius *sin(theta);
+        theta += delta;
+    }
 }
 
 + (Class)layerClass {
@@ -256,8 +256,8 @@ static CGFloat rotationSpeed = 0.5;
     
 //    glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(indices[0]), GL_UNSIGNED_BYTE, 0);
     
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, allSize/sizeof(Vertex));
-    glDrawArrays(GL_TRIANGLE_FAN, 0, allSize/sizeof(Vertex));
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 40*2);
+    glDrawArrays(GL_TRIANGLE_FAN, 40*2, 41);
 
     [_contex presentRenderbuffer:GL_RENDERBUFFER];
 }
@@ -377,7 +377,11 @@ static CGFloat rotationSpeed = 0.5;
         0, 0,  0, 1
     };
     
-    glUniformMatrix4fv(_projectionUniform, 1, 0, &ortho[0]);
+    CC3GLMatrix *rotation = [[CC3GLMatrix alloc] initIdentity];
+//    [rotation populateFromFrustumLeft:-1 andRight:1 andBottom:-1 andTop:1 andNear:-1 andFar:1];
+    
+    [rotation populateOrthoFromFrustumLeft:-1.6 andRight:1.6 andBottom:-2.4 andTop:2.4 andNear:-5 andFar:10];
+    glUniformMatrix4fv(_projectionUniform, 1, 0, rotation.glMatrix);
 }
 
 - (void)applyRotation:(CGFloat)degrees {
@@ -392,7 +396,11 @@ static CGFloat rotationSpeed = 0.5;
 //    };
     
     CC3GLMatrix *rotation = [[CC3GLMatrix alloc] initIdentity];
-    [rotation rotateByZ:degrees];
+    CC3Vector rd = {degrees,degrees, 0};
+    
+    [rotation translateByZ:-7];
+    [rotation rotateBy:rd];
+
     
     glUniformMatrix4fv(_modleUniform, 1, 0, rotation.glMatrix);
 }
