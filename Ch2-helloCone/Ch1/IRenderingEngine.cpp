@@ -177,13 +177,13 @@ void RenderingEngine2::Render() const {
     const GLvoid* pColors = &m_cone[0].Color.x;
     glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), pCoords);
     glVertexAttribPointer(colorSlot, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), pColors);
-    glDrawArrays(GL_TRIANGLES, 0, m_cone.size());
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, m_cone.size());
     
-//    const GLvoid* dCoords = &m_disk[0].Position.x;
-//    const GLvoid* dColors = &m_disk[0].Color.x;
-//    glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), dCoords);
-//    glVertexAttribPointer(colorSlot, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), dColors);
-//    glDrawArrays(GL_TRIANGLE_FAN, 0, m_disk.size());
+    const GLvoid* dCoords = &m_disk[0].Position.x;
+    const GLvoid* dColors = &m_disk[0].Color.x;
+    glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), dCoords);
+    glVertexAttribPointer(colorSlot, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), dColors);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, m_disk.size());
     
 }
 
